@@ -1,7 +1,5 @@
 name: ios27-launch-repro
 on: { push: { branches: [main] }, workflow_dispatch: {} }
-env:
-  DEVS: "iPhone 17 Pro$|iPhone 17 Pro Max|iPhone 16e|iPhone 17e|iPad Air 11-inch|iPad Pro 13-inch|iPad \\(A16\\)|iPad mini"
 jobs:
   build-26:
     runs-on: macos-26
@@ -9,32 +7,25 @@ jobs:
       - uses: actions/checkout@v4
       - run: sudo xcode-select -s /Applications/Xcode_26.3.app && xcodebuild -version
       - run: xcodebuild -project Droplis.xcodeproj -target Droplis -configuration Release -sdk iphonesimulator -arch arm64 CODE_SIGNING_ALLOWED=NO SYMROOT=$PWD/out build | tail -5
-      - run: cd out/Release-iphonesimulator && plutil -p Droplis.app/Info.plist | grep -E "DTSDK|DTXcode" && zip -qry ../../app26.zip Droplis.app
+      - run: cd out/Release-iphonesimulator && zip -qry ../../app26.zip Droplis.app
       - uses: actions/upload-artifact@v4
         with: { name: app26, path: app26.zip }
-  run-ios27-sdk26:
+  ios27:
     needs: build-26
     runs-on: xcode-27
-    timeout-minutes: 90
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        device: ["iPhone 17 Pro$", "iPhone 17 Pro Max", "iPad Air 11-inch \\(M3\\)", "iPad Pro 13-inch \\(M5\\)$", "iPad \\(A16\\)"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with: { name: app26 }
-      - run: unzip -q app26.zip && xcodebuild -version && xcrun simctl list runtimes
-      - run: ./sim-matrix.sh "$PWD/Droplis.app" "iOS 27" out27 "$DEVS"
+      - run: unzip -q app26.zip && xcrun simctl list runtimes | grep iOS && xcrun simctl list devicetypes | grep -E "iPhone 17|iPad"
+      - run: ./sim-matrix.sh "$PWD/Droplis.app" "iOS 27" out "${{ matrix.device }}"
+      - if: always()
+        run: echo "ART=$(echo '${{ matrix.device }}' | tr -cd 'A-Za-z0-9')" >> $GITHUB_ENV
       - if: always()
         uses: actions/upload-artifact@v4
-        with: { name: results-ios27-sdk26, path: out27 }
-  run-ios26-sdk26:
-    needs: build-26
-    runs-on: macos-26
-    timeout-minutes: 60
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with: { name: app26 }
-      - run: unzip -q app26.zip && xcrun simctl list runtimes
-      - run: ./sim-matrix.sh "$PWD/Droplis.app" "iOS 26.5" out26 "iPhone 17 Pro$|iPad Air 11-inch|iPad Pro 13-inch"
-      - if: always()
-        uses: actions/upload-artifact@v4
-        with: { name: results-ios26-sdk26, path: out26 }
+        with: { name: "ios27-${{ env.ART }}", path: out }

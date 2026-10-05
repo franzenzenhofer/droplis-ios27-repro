@@ -5,6 +5,7 @@
 set -u
 APP="$1"; RT="$2"; OUT="$3"; FILTER="${4:-.}"
 BID=com.franzai.droplis
+cap() { local secs=$1; shift; perl -e 'alarm shift; exec @ARGV' "$secs" "$@"; }
 mkdir -p "$OUT"
 RUNTIME=$(xcrun simctl list runtimes -j | python3 -c "import sys,json;r=[x for x in json.load(sys.stdin)['runtimes'] if x['isAvailable'] and x['name'].startswith('$RT')];print(r[-1]['identifier'] if r else '')")
 [ -z "$RUNTIME" ] && { echo "no runtime $RT"; xcrun simctl list runtimes; exit 1; }
@@ -21,7 +22,7 @@ run_one() { # udid label variant
   local before; before=$(ls "$crashdir" 2>/dev/null | sort)
   xcrun simctl terminate "$udid" $BID >/dev/null 2>&1
   xcrun simctl uninstall "$udid" $BID >/dev/null 2>&1
-  xcrun simctl install "$udid" "$APP" || { echo "$tag INSTALL_FAILED" | tee -a "$OUT/summary.txt"; return; }
+  cap 120 xcrun simctl install "$udid" "$APP" || { echo "$tag INSTALL_FAILED" | tee -a "$OUT/summary.txt"; return; }
   local args=()
   case $variant in
     dark) xcrun simctl ui "$udid" appearance dark ;;
@@ -37,8 +38,8 @@ run_one() { # udid label variant
   sleep 25
   local alive=DEAD
   xcrun simctl spawn "$udid" launchctl list 2>/dev/null | grep -q "UIKitApplication:$BID" && alive=ALIVE
-  xcrun simctl io "$udid" screenshot "$OUT/$tag.png" >/dev/null 2>&1
-  xcrun simctl spawn "$udid" log show --start "$start" --style compact --predicate "process == \"Droplis\" OR subsystem == \"$BID\" OR (process == \"SpringBoard\" AND eventMessage CONTAINS \"$BID\") OR eventMessage CONTAINS[c] \"Droplis\"" > "$OUT/$tag.log.txt" 2>&1
+  cap 60 xcrun simctl io "$udid" screenshot "$OUT/$tag.png" >/dev/null 2>&1
+  cap 90 xcrun simctl spawn "$udid" log show --start "$start" --style compact --predicate "process == \"Droplis\" OR subsystem == \"$BID\" OR (process == \"SpringBoard\" AND eventMessage CONTAINS \"$BID\") OR eventMessage CONTAINS[c] \"Droplis\"" > "$OUT/$tag.log.txt" 2>&1
   local new; new=$(comm -13 <(echo "$before") <(ls "$crashdir" 2>/dev/null | sort) | grep -iE "droplis|webcontent|WebKit" )
   for f in $new; do cp "$crashdir/$f" "$OUT/$tag.$f"; done
   local web; web=$(grep -c "\[droplis\] ready" "$OUT/$tag.log.txt")
@@ -50,7 +51,7 @@ IFS=$'\n'
 for line in $DEVICES; do
   type=${line%%|*}; name=${line#*|}
   udid=$(xcrun simctl create "repro $name" "$type" "$RUNTIME" 2>/dev/null) || { echo "$name CREATE_FAILED" >> "$OUT/summary.txt"; continue; }
-  xcrun simctl boot "$udid" && xcrun simctl bootstatus "$udid" -b >/dev/null 2>&1
+  echo "== booting $name $udid"; cap 240 xcrun simctl boot "$udid"; cap 300 xcrun simctl bootstatus "$udid" -b >/dev/null 2>&1; echo "== booted $name"
   for v in fresh dark bigtext german relaunch; do run_one "$udid" "$name" "$v"; done
   xcrun simctl shutdown "$udid"; xcrun simctl delete "$udid"
 done
