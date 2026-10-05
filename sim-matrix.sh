@@ -32,7 +32,7 @@ run_one() { # udid label variant
     relaunch) ;;
   esac
   local start; start=$(date -u +"%Y-%m-%d %H:%M:%S")
-  xcrun simctl launch "$udid" $BID "${args[@]}" > "$OUT/$tag.launch.txt" 2>&1
+  xcrun simctl launch "$udid" $BID ${args[@]+"${args[@]}"} > "$OUT/$tag.launch.txt" 2>&1
   if [ "$variant" = relaunch ]; then sleep 8; xcrun simctl terminate "$udid" $BID; sleep 2; xcrun simctl launch "$udid" $BID >> "$OUT/$tag.launch.txt" 2>&1; fi
   sleep 25
   local alive=DEAD
