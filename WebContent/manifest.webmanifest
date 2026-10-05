@@ -1,0 +1,16 @@
+{
+  "name": "The Droplis Adventures in Dropliland",
+  "short_name": "Droplis",
+  "description": "Tap one Dropli. Its sparkles must pop every other Dropli, in one chain.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#BCCAB9",
+  "theme_color": "#BCCAB9",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

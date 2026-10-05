@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<!-- the launch colour (src/art/launch-colors.ts): the start meadow's own tone, light and under the dark-mode dim, so
+     the iOS launch screen, the page before its first paint and the meadow fading in are one picture -->
+<meta name="theme-color" content="#BCCAB9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#767A84" media="(prefers-color-scheme: dark)">
+<meta name="description" content="The Droplis Adventures in Dropliland. Tap one Dropli - its sparkles must pop every other Dropli in one chain. One path of levels that never ends, and a new daily board every day.">
+<meta property="og:type" content="website">
+<!-- the link preview (owner 2026-10-03, the launch art in output/launch-2026-10/social-preview, compressed): the wide
+     card first, the square one for the places that show a square (https://ogp.me/#array: the first wins a conflict) -->
+<meta property="og:title" content="Droplis: Look what you started.">
+<meta property="og:description" content="Beautiful boards. A first move worth finding. Discover Droplis, a new puzzle game from Franz &amp; Sparks.">
+<meta property="og:url" content="https://droplis.lalo.li/">
+<meta property="og:image" content="https://droplis.lalo.li/og/droplis-launch-2026-10.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:alt" content="Droplis characters in a dreamy flower garden beside an iPhone showing a real floral pipe puzzle. Look what you started.">
+<meta property="og:image" content="https://droplis.lalo.li/og/droplis-launch-2026-10-square.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="1200">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:alt" content="Droplis characters in a dreamy flower garden beside an iPhone showing a real floral pipe puzzle. Look what you started.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Droplis: Look what you started.">
+<meta name="twitter:description" content="Beautiful boards. A first move worth finding. Discover Droplis, a new puzzle game from Franz &amp; Sparks.">
+<meta name="twitter:image" content="https://droplis.lalo.li/og/droplis-launch-2026-10.jpg">
+<meta name="twitter:image:alt" content="Droplis characters in a dreamy flower garden beside an iPhone showing a real floral pipe puzzle. Look what you started.">
+<title>The Droplis Adventures in Dropliland</title>
+<link rel="manifest" href="/manifest.webmanifest?v=8425099712f6">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png?v=8425099712f6">
+<link rel="apple-touch-icon" href="/icon-192.png?v=8425099712f6">
+<link rel="preload" href="/assets/fredoka-latin-DOQG_Jwn.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/meadow-IUw4FaJa.webp" as="image" type="image/webp">
+<!-- a page opened on a link (#level-N, #daily, a release reload into its board, fresh.ts) holds the start screen
+     back until the boot has decided: main.ts shows it at once when the decision is home -->
+<script>if(location.hash)document.documentElement.classList.add('boot')</script>
+<!-- a tap on the start screen before the game's script runs is kept and played once it does (src/game/early-tap.ts) -->
+<script>addEventListener('click',function(e){var b=e.target&&e.target.closest&&e.target.closest('#playBtn,#homeDaily,#homeMenu,#homeSet');if(b&&!window.__bound&&!window.__early)window.__early=b.id},true)</script>
+<style>
+@font-face{font-family:'Sniglet';font-style:normal;font-weight:800;font-display:swap;src:url('data:font/woff2;base64,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') format('woff2')}
+@font-face{font-family:'Fredoka';font-style:normal;font-weight:300 700;font-display:swap;src:url('/assets/fredoka-latin-DOQG_Jwn.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Fredoka';font-style:normal;font-weight:300 700;font-display:swap;src:url('/assets/fredoka-latin-ext-tYNUQHO6.woff2') format('woff2');unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+:root{--display:Sniglet,Fredoka,'Arial Rounded MT Bold',sans-serif;--ink:#2D1D63;--ink2:#6A5AA8;--glass:rgba(255,255,255,.72);--glass2:rgba(255,255,255,.9);--pink:#FF6FAF;--pinkL:#FFA7CF;--pinkD:#E64D92;
+  --gold:#FFD83D;--goldD:#F0B91F;--sky:#74CFFF;--skyD:#3FA6E8;--dim:transparent;--lip:rgba(45,29,99,.14);
+  box-sizing:border-box;
+  /* the safe area (notch, Dynamic Island, rounded corners, Home indicator): the ONLY place env(safe-area-inset-*) is read;
+     every inset below goes through these, and the e2e sets them to simulate a phone (tests/e2e/ios-fit.spec.ts) */
+  --sa-t:env(safe-area-inset-top,0px);--sa-r:env(safe-area-inset-right,0px);--sa-b:env(safe-area-inset-bottom,0px);--sa-l:env(safe-area-inset-left,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--dim:rgba(22,12,58,.42);--glass:rgba(255,255,255,.8)}}
+:root[data-theme="dark"]{--dim:rgba(22,12,58,.42);--glass:rgba(255,255,255,.8)}
+*,*::before,*::after{box-sizing:inherit}
+html,body{height:100%;overflow:hidden;overscroll-behavior:none;position:fixed;inset:0;touch-action:none}
+*{-webkit-touch-callout:none}
+body{margin:0;height:100%;background:#BCCAB9;color:var(--ink);font-family:Fredoka,Nunito,"Trebuchet MS",system-ui,sans-serif;font-weight:500;
+  -webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;overflow-x:hidden}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;border:0}
+button:focus-visible,[role=button]:focus-visible{outline:3px solid var(--pink);outline-offset:3px}
+/* painted world backdrops (cross-fading pair) */
+.bg{position:fixed;inset:-3%;background-size:cover;background-position:center 70%;transition:opacity .7s ease;z-index:0;animation:drift 38s ease-in-out infinite alternate}
+@keyframes drift{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.05) translate(-1%,-1.2%)}}
+/* the start meadow fades in from the launch colour (Apple: a launch screen of the solid colour the first screen comes
+   from, https://developer.apple.com/design/human-interface-guidelines/launching#Launch-screens); `backwards` only, so
+   the cross-fades' inline opacity rules once it is done */
+#bgA{animation:drift 38s ease-in-out infinite alternate,bgIn .28s ease-out backwards}@keyframes bgIn{from{opacity:0}}
+#tw{position:fixed;inset:0;z-index:0;pointer-events:none}
+#tw i{position:absolute;width:14px;height:14px;opacity:0;animation:twinkle 5s ease-in-out infinite;background:no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M20 0l4.3 15.7L40 20l-15.7 4.3L20 40l-4.3-15.7L0 20l15.7-4.3z' fill='%23fffbe6'/%3E%3C/svg%3E")}
+@keyframes twinkle{0%,100%{opacity:0;transform:scale(.3) rotate(0)}45%{opacity:.95;transform:scale(1) rotate(45deg)}60%{opacity:.7}}
+#bgB{opacity:0}
+#dim{position:fixed;inset:0;background:var(--dim);z-index:0;pointer-events:none}
+/* the win's confetti flies over everything, the HUD and the card included, and is never in the way of a tap */
+#confetti{position:fixed;inset:0;width:100%;height:100%;z-index:8;pointer-events:none}#confetti[hidden]{display:none}
+/* the home backdrop: a 1 KB blurred preview (inlined) under the full picture, so a first visit's first paint is the meadow already (docs/20) */
+.bg-meadow{background-image:url(/assets/meadow-IUw4FaJa.webp),url(data:image/webp;base64,UklGRloEAABXRUJQVlA4IE4EAABwFACdASowAGgAPrlGn0qnI6Mhs9ic+OAXCWwAnTLQrr8+aFml0Nb+PAl2+3PIeczvt+9B13xjNbPFTT391+tRb/yV/AoQYUebUhBXmW0deO9fgtKo81ho8LioT6NCWgcYKJurs3b1YNOVCMWRlanGkgnhtNWJx37HqyMUU9jZ8BKWBDlh5cn6xfuT9FoPxHns+FOBo5VaZZRKro3c+p83T/B2LjVMNc8nAEHgAP51f+eeROEY5EG+Da9P14VVqqpife+iOk4zOuU0Dn0uY2AlMuiLMXeBMFUYIavIbKsKs+/K81Z5G980pHJ6mHLof49KWTA3bUtsgqqnyHNRNomNrkwv4NnnPyu37XzQv5kKo09cUT8QmYAV0t3QLmWG7X5f8c+drwU630tXvBHUoMAC800o/83U3DW167lnFlHF91VJrXuuXo2SColcpmmKFu0sfwCn2jIaq4TurR/tgddkw8ymno7iqP8Ntboe2wzKFQ6J6YkU1F5n6N9cHa8hhCW7jaeYRFTmVMgIMtnFqheLgGoJhRxf28zTfbAVM8QwPpVzwDKTNxooeYrlztwBk1TJpmsyP+IbXVBhstGqmeiNg1kTa1KyV+3ncyCiQUhN0aqQ5+PP/BW6nKo0xFTZCBYFRAQOdqyIzg3tk/ej6yQ2TixVBAaPy1x7cR6DFLlGJbgrIsYcziuhG1dvV+KX0w01lT9w5l62yK7CI5WjnZHju5Jn5R89up9BzxLSv8kBaTLCWttGHY8NQOAUH9p5pnhTeaoX4/fbSNYJg39HMLuUHd+8PB9L4WK5UmPrNOdi5PBSS4NbjX8aKIqJD7otxECzHkf24Y3X1JJiF19rWo2miYWeVg3Ump8Vf115ZevDNFE4IFhRcYPLjyc/eZmm6oX4loP6VA6Rs+VEd8C0QyUjTQZ36vuq4/hB+VRdACZ+vBIKcK9zUCd1YSeDB0JEQH260Co9aSNweMz3PfXbrqdo2tKwUW2BWskuy+fK9IXUXMoL+go6mT0+HFzXlTQ9wApzNbPlhyrpAKWraekXDGj9LJ7ldQDGdaTmV5q2uKyHlpOYEodgOHb6ijmesnUBHSXP7GSo7bt5yAxcPn+aoPh2v3z6yTACmHeLstB6d2NaNVC3nnlOuZKMtjExyQVYUEJVvXNe+oFUqhb8nl4vQfsp69N8a15CM2Tzse3qPxIt2bRcIH0CcP3rTQJecIw0aRnNiYT5SVVyk/Pv1nzr3ZaUUKTIhTAuADfqEkH1HIr2kev2uPbx37tx/ImGeoacuAmfmqkXWREqwt9lI9xsj3TFzWGJ4BcnEhdaSYQGgxJl/N/FJU13wYGm6Yqvm+kkuO1OaWoxZg0jXwpbGGyrfa83pLwwPztaPQt7AEyYqddppPzouzvZKkekAmjU9MBxO82tA/HfWn0mVtLrfFCTpCRoNaN+f7LkG2O4VXlYeHBSssqh2Ety5urSRyEFAAAA)}.bg-violet{background-image:url(/assets/violet-bDQFBemd.webp)}.bg-sky{background-image:url(/assets/sky-4ZDU44wE.webp)}.bg-mint{background-image:url(/assets/mint-TY1-CGOS.webp)}.bg-peach{background-image:url(/assets/peach-DCCianyU.webp)}.bg-ocean{background-image:url(/assets/ocean-Brg1QXIk.webp)}.bg-wind{background-image:url(/assets/wind-I13WP2Jx.webp)}.bg-yellow{background-image:url(/assets/yellow-BiCu5dXO.webp)}.bg-lava{background-image:url(/assets/lava-Dg__MtKV.webp)}
+.bg-pipe-garden{background-image:url(/assets/pipe-garden-BKAYNeAv.webp)}.bg-cloud-harbor{background-image:url(/assets/cloud-harbor-B3xztSIe.webp)}.bg-lever-workshop{background-image:url(/assets/lever-workshop-DSwQ8apR.webp)}.bg-crystal-cavern{background-image:url(/assets/crystal-cavern-D_dt5Xyi.webp)}.bg-warp-garden{background-image:url(/assets/warp-garden-Bd2Sd-dF.webp)}.bg-bubble-lagoon{background-image:url(/assets/bubble-lagoon-sO5shZAS.webp)}.bg-ember-forge{background-image:url(/assets/ember-forge-C5SeMnxd.webp)}.bg-wind-terraces{background-image:url(/assets/wind-terraces-V1N1MYqS.webp)}.bg-clockwork-rails{background-image:url(/assets/clockwork-rails-oy7B8HTh.webp)}.bg-moonlit-gates{background-image:url(/assets/moonlit-gates-k2YPKBdr.webp)}.bg-flower-haven{background-image:url(/assets/flower-haven-BxSJLiZD.webp)}
+#app{position:relative;z-index:1;height:100dvh;overflow:hidden;padding:var(--sa-t) var(--sa-r) var(--sa-b) var(--sa-l);display:flex;flex-direction:column;align-items:center}
+#app[hidden]{display:none}
+/* the studio's play pane (dev server only, docs/19): the board alone on its backdrop */
+body.studio-bare .hud,body.studio-bare #side,body.studio-bare #tw{display:none}
+body.studio-bare main{padding-top:8px}
+#side{display:flex;flex-direction:column;align-items:center;width:100%}
+/* HUD: two corner circles and a floating outlined title, no pill (UI info sheet 2026-09-28) */
+.hud{width:100%;max-width:560px;height:72px;flex:none;display:grid;grid-template-columns:48px 1fr 48px;gap:12px;align-items:center;padding:0 20px}
+.hud .rb{width:48px;height:48px;background:rgba(255,255,255,.9);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.rb{width:46px;height:46px;border-radius:50%;background:#fff;display:grid;place-items:center;flex:none;box-shadow:0 3px 0 var(--lip);transition:transform .08s}
+.rb:active{transform:translateY(2px) scale(.94);box-shadow:0 1px 0 var(--lip)}
+@media (hover:hover){.rb:hover{transform:translateY(-1px)}}
+.rb svg{width:24px;height:24px}
+#title{flex:1;min-width:0;text-align:center;line-height:1.05;padding:2px 0}
+#lvl{display:block;font-family:var(--display);font-size:30px;font-weight:800;letter-spacing:.005em;line-height:1.05;color:#2D1D63;
+  text-shadow:2px 0 0 #fff,-2px 0 0 #fff,0 2px 0 #fff,0 -2px 0 #fff,1.5px 1.5px 0 #fff,-1.5px 1.5px 0 #fff,1.5px -1.5px 0 #fff,-1.5px -1.5px 0 #fff,0 5px 10px rgba(45,29,99,.25)}
+#lvl[data-news]::after{content:attr(data-news);display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;background:var(--pink);color:#fff;font-size:16px;line-height:1.4;letter-spacing:0;vertical-align:middle;text-shadow:none}
+#stars{display:flex;justify-content:center;gap:2px;height:22px;align-items:center}
+.st{width:20px;height:20px;display:inline-block;vertical-align:middle}
+#stars .st{filter:drop-shadow(1.5px 0 0 #fff) drop-shadow(-1.5px 0 0 #fff) drop-shadow(0 1.5px 0 #fff) drop-shadow(0 -1.5px 0 #fff)}
+#stars .st.lost{animation:lost .9s cubic-bezier(.3,1.2,.5,1) .12s backwards}
+@keyframes lost{0%{transform:scale(1.16) rotate(-10deg)}40%{transform:translateY(-3px) scale(1.08) rotate(7deg)}100%{transform:none}}
+#stars .one{display:inline-flex;align-items:center;gap:4px;font-size:16px;font-weight:600;color:var(--ink2)}
+#stars .one svg{width:15px;height:15px}
+/* the row under "Level N" is the level's own name; the stars take it over only while one is being lost, on the daily
+   (its streak) and on a board without a name (owner 2026-10-01). The name is a dark word on a soft glass label: an
+   outlined 16 px word on a painted backdrop was hardly readable, a solid white pill with hard swaps was brutal (owner
+   2026-10-02). Name and stars share one place and cross-fade; the whole row fades out while the next level loads */
+#srow{display:grid;place-items:center;height:22px;transition:opacity .34s ease}
+#srow.swap{opacity:0;transition-duration:.16s}
+#srow>*{grid-area:1/1;transition:opacity .34s ease,transform .34s cubic-bezier(.2,.8,.3,1),visibility 0s}
+#lname{display:inline-block;max-width:100%;white-space:nowrap;overflow:hidden;font-size:16px;font-weight:600;line-height:22px;color:var(--ink);
+  padding:0 9px;border-radius:11px;background:var(--glass);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+#srow:not(.stars) #stars,#srow.stars #lname,#lname:empty{opacity:0;visibility:hidden;transform:scale(.94);transition:opacity .24s ease,transform .24s ease,visibility 0s .24s}
+/* the narrowest phones: the HUD's side padding gives its room to the name (the longest owner name is 177 px wide) */
+@media (max-width:340px){.hud{padding:0 8px;gap:6px}}
+
+/* the board as big as the screen allows: 6 px gutters, the board and what sits under it centred in the height left */
+main{width:100%;max-width:560px;padding:4px 6px 0;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;min-height:0}
+#wrap{display:flex;justify-content:center;width:100%;position:relative}
+/* the praise word: its own compositor layer above the board, no layout footprint, animated on transform/opacity only (src/game/praise.ts);
+   80vw at most, so the two dashes beside it (.62em each, the font is 11vw) stay on a phone's screen while it grows; every line of
+   runtime/praise.ts is one row inside that (tests/e2e/win-card.spec.ts) */
+#praise{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);opacity:0;pointer-events:none;will-change:transform,opacity;contain:layout style;z-index:2;
+  width:max-content;max-width:min(80vw,540px);text-align:center;line-height:1.1;text-wrap:balance;
+  font-family:var(--display);font-size:clamp(34px,11vw,56px);font-weight:800;letter-spacing:.01em;color:var(--ink);
+  -webkit-text-stroke:0 transparent;text-shadow:3px 0 0 #fff,-3px 0 0 #fff,0 3px 0 #fff,0 -3px 0 #fff,2px 2px 0 #fff,-2px 2px 0 #fff,2px -2px 0 #fff,-2px -2px 0 #fff,0 7px 12px rgba(45,29,99,.28)}
+#praise::before,#praise::after{content:"";position:absolute;top:50%;width:.36em;height:.13em;border-radius:.1em;background:#B98CFF;transform:translateY(-50%) rotate(-28deg)}
+#praise::before{left:-.62em}#praise::after{right:-.62em;transform:translateY(-50%) rotate(28deg)}
+#praise[hidden]{display:none}
+#arrow{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:3}
+#arrow[hidden]{display:none}
+#arrowM{will-change:transform,opacity;transform-box:view-box;transform-origin:0 0}
+.say{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.slab{padding:5px;border-radius:26px;background:rgba(255,255,255,.34);-webkit-backdrop-filter:blur(12px) saturate(1.3);backdrop-filter:blur(12px) saturate(1.3);
+  box-shadow:0 0 0 2px rgba(255,255,255,.85) inset,0 20px 40px -20px rgba(45,29,99,.5);transform-origin:50% 60%}
+canvas#board{display:block;touch-action:none;border-radius:21px;background:transparent;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+#chain{width:100%;height:64px;margin-top:4px;text-align:center;font-family:var(--display);font-size:54px;font-weight:800;line-height:64px;color:var(--ink);pointer-events:none;
+  text-shadow:3px 0 0 #fff,-3px 0 0 #fff,0 3px 0 #fff,0 -3px 0 #fff,2px 2px 0 #fff,-2px 2px 0 #fff,2px -2px 0 #fff,-2px -2px 0 #fff,0 7px 12px rgba(45,29,99,.28)}
+#chain b{color:var(--pink);font-weight:800}
+/* the number warms as the chain grows; its milestone sparks fly in #chainFx, a zero-height strip beside the row
+   (hud.ts: nothing but the small number ever animates inside the row) */
+#chain .n.warm{color:var(--pinkD)}#chain .n.hot{color:#E97A00}#chain .n.warm b,#chain .n.hot b{color:var(--goldD)}
+#chainFx{display:block;position:relative;width:100%;height:0;pointer-events:none}
+/* a tall phone has the room: the counter is bigger there (the block stays centred, the board never moves for it) */
+@media (min-height:800px) and (max-width:699px){#chain{font-size:64px;height:74px;line-height:74px}}
+#chainFx .spk{width:12px;height:12px;background:var(--pink);box-shadow:0 0 0 2px #fff}#chainFx .spk:nth-child(odd){background:var(--gold);box-shadow:0 0 0 2px var(--goldD)}
+/* the number pulses, not the row; the row keeps one layer for good, so no transient layer is ever torn down on iOS */
+#chain .n{display:inline-block;transform-origin:50% 60%}
+#chain{transform:translateZ(0)}
+/* the one toast (src/game/toast.ts): always exactly one line; in its slot under the board, or floating over a sheet */
+#toastSlot{width:100%;height:52px;display:flex;align-items:center;justify-content:center}
+#toast{display:flex;justify-content:center;pointer-events:none;max-width:100%}
+#toast[hidden]{display:none}
+#toast.float{position:fixed;left:0;right:0;top:50%;transform:translateY(-50%);z-index:9}
+#toast.float #toastText{background:#fff;box-shadow:0 4px 0 var(--lip),0 16px 34px -12px rgba(45,29,99,.65)}
+#toastText{display:block;white-space:nowrap;overflow:hidden;max-width:calc(100vw - 24px);font-size:18px;font-weight:600;line-height:1.3;color:var(--ink);
+  background:rgba(255,255,255,.9);border-radius:999px;padding:12px 20px;box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 8px 22px -12px rgba(45,29,99,.55);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);animation:toastIn .28s cubic-bezier(.2,1.3,.4,1)}
+/* the Dropli a line names, before its name (toast-line.ts): as tall as the line and a little more, its middle on the middle of the letters;
+   the margins take the extra back, so the pill is as tall as with text alone */
+.tface{display:inline-block;width:1.8em;height:1.8em;margin:-.6em .1em -.6em -.2em;vertical-align:.07em}
+/* a narrow phone: the longest hint with its picture keeps to the one line, the pill gives up a little of its side padding */
+@media (max-width:340px){#toastText{padding-left:14px;padding-right:14px}}
+@keyframes toastIn{0%{transform:translateY(6px) scale(.92);opacity:0}100%{transform:none;opacity:1}}
+#acts{display:flex;justify-content:center;gap:10px}
+#acts:has(#retryBtn:not([hidden])){margin-top:10px}
+#acts button{border-radius:999px;padding:10px 18px 10px 14px;background:#fff;font-size:16px;font-weight:600;box-shadow:0 3px 0 var(--lip);display:inline-flex;gap:7px;align-items:center;transition:transform .08s}
+#acts button:active{transform:translateY(2px) scale(.96)}
+#acts button svg{width:20px;height:20px}
+/* the hint bulb (owner 2026-09-28): small, bottom-right, a switched-off bulb until pressed; it lights while the hint shows */
+#acts #hintBtn{position:fixed;right:calc(16px + var(--sa-r));bottom:calc(16px + var(--sa-b));width:44px;height:44px;padding:0;border-radius:50%;justify-content:center;z-index:4;
+  background:rgba(255,255,255,.9);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 3px 0 rgba(45,29,99,.16);transition:transform .08s,opacity .15s,box-shadow .25s,background .25s}
+#acts #hintBtn svg{width:28px;height:28px;overflow:visible}
+#hintBtn .glass{fill:#EFEBFB;stroke:#A99BD8;transition:fill .25s,stroke .25s}
+#hintBtn .wire{stroke:#A99BD8;transition:stroke .25s}
+#hintBtn .rays,#hintBtn .gleam{opacity:0;transition:opacity .25s}
+#acts #hintBtn.on{background:#FFF7D1;box-shadow:0 3px 0 rgba(45,29,99,.16),0 0 0 3px rgba(255,216,61,.55),0 0 22px 6px rgba(255,216,61,.6)}
+#hintBtn.on .glass{fill:#FFD83D;stroke:#EDA812}
+#hintBtn.on .wire{stroke:#C97F0A}
+#hintBtn.on .rays,#hintBtn.on .gleam{opacity:1}
+#acts #hintBtn:active{transform:translateY(2px) scale(.94)}
+#acts #hintBtn[aria-disabled="true"]:not(.on){opacity:.45}
+#acts #hintBtn.away{display:none}
+#acts button:not([hidden]){animation:tileIn .4s cubic-bezier(.2,1.5,.4,1)}
+#acts button[hidden]{display:none}
+/* shared overlay + sheet */
+.ov{position:fixed;inset:0;display:grid;place-items:center;background:rgba(45,29,99,.38);padding:max(20px,var(--sa-t)) max(20px,var(--sa-r)) max(20px,var(--sa-b)) max(20px,var(--sa-l));z-index:5;-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+.ov[hidden]{display:none}
+.sheet{background:#fff;border-radius:32px;padding:22px 20px 20px;text-align:center;max-width:340px;width:100%;box-shadow:0 8px 0 var(--lip),0 30px 60px -20px rgba(45,29,99,.55);animation:rise .38s cubic-bezier(.2,1.4,.4,1)}
+@keyframes rise{0%{transform:translateY(26px) scale(.9);opacity:0}100%{transform:none;opacity:1}}
+.sheet h2{margin:0 0 6px;font-family:var(--display);font-size:30px;font-weight:800;letter-spacing:.005em;line-height:1.1}
+.sheet p{margin:0 0 18px;color:var(--ink2);font-size:17px;line-height:1.35}
+.jelly{display:block;width:100%;border-radius:999px;padding:14px 18px;font-family:var(--display);font-size:21px;font-weight:800;letter-spacing:.01em;margin-top:10px;position:relative;
+  background:linear-gradient(180deg,#FF9CCB,var(--pink));color:var(--ink);box-shadow:0 6px 0 var(--pinkD),0 1px 0 rgba(255,255,255,.7) inset;transition:transform .08s}
+.jelly::after{content:"";position:absolute;left:18px;right:40%;top:6px;height:8px;border-radius:8px;background:rgba(255,255,255,.55)}
+.jelly:active{transform:translateY(4px) scale(.98);box-shadow:0 2px 0 var(--pinkD)}
+.jelly.breathe{animation:breathe 1.6s ease-in-out infinite}
+/* a pressed button answers the finger, breathing or not */
+.jelly.breathe:active{animation:none}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
+.jelly.white{background:linear-gradient(180deg,#fff,#F1ECFF);box-shadow:0 6px 0 #CFC4F5,0 1px 0 #fff inset}
+.jelly.white:active{box-shadow:0 2px 0 #CFC4F5}
+.jelly.yellow{background:linear-gradient(180deg,#FFF080,var(--gold));box-shadow:0 6px 0 var(--goldD),0 1px 0 rgba(255,255,255,.7) inset}
+.jelly.yellow:active{box-shadow:0 2px 0 var(--goldD)}
+/* Share on the result card: its own sky-blue pill with the share icon, smaller than Next and centred under it */
+.jelly.share{display:flex;align-items:center;justify-content:center;gap:8px;width:auto;min-width:54%;margin:14px auto 0;padding:10px 26px;font-size:19px;
+  background:linear-gradient(180deg,#B5EAFF,var(--sky));box-shadow:0 5px 0 var(--skyD),0 1px 0 rgba(255,255,255,.75) inset}
+.jelly.share:active{box-shadow:0 2px 0 var(--skyD)}
+.jelly.share::after{left:22px;right:45%;top:5px;height:6px}
+.jelly.share svg{width:22px;height:22px;flex:none}
+.jelly small{display:flex;align-items:center;justify-content:center;gap:4px;font-family:Fredoka,sans-serif;font-size:16px;font-weight:600;opacity:.85;margin-top:1px;letter-spacing:0}
+.jelly small svg{width:14px;height:14px}
+/* a line not filled yet keeps its height, so nothing moves when the script fills it */
+.jelly small:empty::before{content:"\00a0"}
+.jelly[hidden]{display:none}
+/* win card: bottom sheet so the celebrating board stays in view */
+#card{place-items:end center;grid-template-columns:minmax(0,1fr);background:linear-gradient(transparent 45%,rgba(45,29,99,.28));-webkit-backdrop-filter:none;backdrop-filter:none;padding:max(12px,var(--sa-t)) max(12px,var(--sa-r)) calc(14px + var(--sa-b)) max(12px,var(--sa-l))}
+#card .sheet{max-width:420px;animation:sheetUp .45s cubic-bezier(.2,1.25,.4,1);margin-top:96px;padding-top:10px}
+@keyframes sheetUp{0%{transform:translateY(110%)}100%{transform:none}}
+/* the card's one line (src/game/card-line.ts): the level's name, the chain, the first-try mark. Never two lines: a long
+   name on a small phone keeps its place and the mark keeps only its flame (.tight, set by card.ts) */
+#cardCv{display:block;width:100%;height:118px;margin:-92px auto 0;pointer-events:none}
+#cardB{overflow:hidden}#cardB .fill{position:absolute;inset:0;border-radius:inherit;background:rgba(214,74,140,.38);transform:scaleX(0);transform-origin:left center;will-change:transform;pointer-events:none}#cardB .lbl{position:relative}
+#cardStars{display:flex;justify-content:center;gap:6px;height:58px;margin:0 0 6px;align-items:flex-end}
+#cardStars[hidden]{display:none}
+#cardT{margin:6px 0 10px}#cardT[hidden]{display:none}
+#cardStars .st{width:50px;height:50px;transform:scale(0)}
+#cardStars .st:nth-child(2){width:58px;height:58px}
+#cardStars{position:relative}
+#cardStars .st.show{animation:star .5s cubic-bezier(.2,1.8,.4,1) forwards}
+/* a star that was not earned arrives quietly, with a small sad tilt; the last earned one lands biggest */
+#cardStars .st.show:not(.lit){animation:starOff .5s ease-out forwards}
+#cardStars .st.show.last{animation:starLast .5s cubic-bezier(.2,1.6,.4,1) forwards}
+@keyframes star{0%{transform:scale(0) rotate(-40deg)}100%{transform:scale(1) rotate(0)}}
+@keyframes starOff{0%{transform:scale(0) rotate(-8deg)}70%{transform:scale(1.03) rotate(7deg)}100%{transform:scale(1) rotate(0)}}
+@keyframes starLast{0%{transform:scale(0) rotate(-55deg)}55%{transform:scale(1.34) rotate(6deg)}100%{transform:scale(1) rotate(0)}}
+/* the gold sparks of a landing star (card.ts) */
+.spk{position:absolute;width:8px;height:8px;border-radius:50%;background:#FFC21A;box-shadow:0 0 0 1.5px #EDA812;pointer-events:none}
+/* afterglow, once every star has landed: a glint runs across the earned stars, then they breathe; nothing waits for it */
+#cardStars.after .st{transform:scale(1)}
+#cardStars.after .st:not(.lit){animation:none}
+#cardStars.after .st.lit{animation:glint .7s ease-out both,starBreathe 2.6s ease-in-out .7s infinite}
+#cardStars.after .st.lit:nth-child(2){animation-delay:.1s,.8s}
+#cardStars.after .st.lit:nth-child(3){animation-delay:.2s,.9s}
+@keyframes glint{0%{filter:brightness(1)}40%{filter:brightness(1.3) drop-shadow(0 0 7px rgba(255,216,61,.95))}100%{filter:brightness(1)}}
+@keyframes starBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.045)}}
+/* intro card */
+.banner{height:136px;border-radius:22px;margin:-4px -4px 14px;background-size:cover;background-position:center 30%;display:grid;place-items:center;position:relative;overflow:hidden}
+.banner canvas{border-radius:16px;box-shadow:0 8px 18px -8px rgba(45,29,99,.6)}
+.banner .arrow{position:absolute;top:50%;transform:translateY(-50%)}.banner .arrow:active{transform:translateY(calc(-50% + 2px)) scale(.94)}
+#introPrev{left:10px}#introNext{right:10px}.rb[hidden]{display:none}
+/* home */
+#home{position:fixed;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:max(24px,var(--sa-t)) max(24px,var(--sa-r)) max(24px,var(--sa-b)) max(24px,var(--sa-l));gap:6px}
+#home[hidden]{display:none}
+/* the start screen is there at once (owner 2026-09-30): no entrance for the logo, and the game behind it hidden while it
+   shows. The heroes' stage starts empty and keeps its box: the Droplis pop in one by one (owner 2026-10-02, game/heroes.ts) */
+#logo{width:min(96vw,410px);height:auto;overflow:visible}
+body:has(#home:not([hidden])) #app{visibility:hidden}
+.boot #home{visibility:hidden}
+#logo .drop{transform-box:fill-box;transform-origin:50% 100%;animation:dropBob 2.8s ease-in-out infinite}
+@keyframes dropBob{0%,100%{transform:translateY(0) scale(1)}8%{transform:translateY(1px) scale(1.12,.88)}20%{transform:translateY(-7px) scale(.94,1.06)}32%{transform:translateY(0) scale(1.06,.94)}40%{transform:none}}
+#logo .dash{animation:dash 2.8s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes dash{0%,100%{opacity:1}20%{opacity:.35;transform:scale(.8)}}
+#heroCv{width:min(90vw,340px);height:auto;aspect-ratio:34/15;touch-action:manipulation}
+#home .btns{width:min(84vw,320px)}
+#home .rb.corner{position:absolute;top:calc(12px + var(--sa-t));right:calc(14px + var(--sa-r))}
+/* level sheet */
+#menu{align-items:start;padding:max(12px,var(--sa-t)) max(12px,var(--sa-r)) max(12px,var(--sa-b)) max(12px,var(--sa-l));grid-template-rows:minmax(0,1fr);grid-template-columns:minmax(0,1fr)}
+#menu .sheet{max-width:440px;min-width:0;justify-self:center;text-align:left;padding:14px 14px 10px;max-height:100%;display:flex;flex-direction:column;box-sizing:border-box}
+#path{overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;min-height:0;flex:1;padding:10px 10px 8px;-webkit-overflow-scrolling:touch}
+#menu .top{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+#menu .top h2{flex:1;min-width:0;margin:0;font-size:clamp(20px,6.4vw,26px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* a 320 pt layout (iPhone Display Zoom): the header's five pieces and the full title still fit */
+@media (max-width:359px){#menu .sheet{padding:12px 10px 8px}#menu .top{gap:4px}}
+#menu .top .rb{box-shadow:0 3px 0 var(--lip);background:#F3EEFF}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}#path{display:block}#path .blk{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;padding:12px 10px 0;margin:-12px -10px 8px;content-visibility:auto;contain-intrinsic-size:auto var(--blk-h,1000px)}
+.grid button{aspect-ratio:1.15;border-radius:18px;background:#F3EEFF;font-size:19px;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0;box-shadow:0 3px 0 #DCD3F7}
+.grid button{font-family:var(--display);font-weight:800;-webkit-touch-callout:none}
+.grid button i{display:flex;gap:0;height:12px}
+.grid button i .st{width:12px;height:12px}
+.grid button i.done svg{width:14px;height:14px;color:var(--ink2)}
+.grid button svg.lk{width:18px;height:18px}
+.grid button.lock{opacity:.4;box-shadow:none}
+.grid button{animation:tileIn .35s cubic-bezier(.2,1.5,.4,1) backwards}
+@keyframes tileIn{0%{transform:scale(.6);opacity:0}}
+.grid button:active{transform:scale(.93)}
+.grid button.owed{outline:3px dashed var(--pink);outline-offset:-6px}.grid .beyond{grid-column:1/-1;margin:10px 0 4px;text-align:center;font-family:var(--display);font-weight:800;font-size:20px;color:var(--ink2)}
+.grid button.cur{background:#FFE3F0;box-shadow:0 3px 0 var(--pinkD),0 0 0 2px var(--pink) inset}
+.grid button{position:relative}
+/* the new-piece badge: a small white chip on the tile's corner, clear of the number */
+/* the badge overhangs its tile by less than #path's padding, or the list's edge cuts it (320 pt, 1.0.5) */
+.grid button img.new{position:absolute;top:-8px;right:-7px;width:30px;height:30px;padding:2px;box-sizing:border-box;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(45,29,99,.22),0 0 0 2px #EFE9FF}
+.grid{padding-top:6px}
+@media (max-width:400px){.grid button img.new{top:-8px;right:-7px;width:25px;height:25px;padding:1px}}
+#settings{display:grid;margin-top:14px;padding-top:12px;border-top:2px solid #EFE9FF}
+.tog{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;padding:11px 14px;font-size:17px;font-weight:600;background:#F3EEFF;color:var(--ink2);box-shadow:0 3px 0 #DCD3F7;transition:transform .08s}
+.tog svg{width:22px;height:22px;opacity:.45}
+#settings{grid-template-columns:1fr 1fr;gap:8px}
+#menuSet,#menuCast{width:100%;min-width:0}#menuSet svg,#menuCast svg{opacity:1}
+/* the cast sheet (issue #109): every Dropli in the order the path brings them, one line of character each; one not met yet is a shadow */
+#castOv{z-index:7}
+#castOv .sheet{max-width:420px;text-align:left;padding:16px 16px 18px;max-height:100%;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;box-sizing:border-box}
+#castOv .top{display:flex;align-items:center;gap:10px;margin:0 2px 8px}
+#castOv .top h2{flex:1;margin:0;font-size:28px}
+#castList{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
+.castc{display:flex;align-items:center;gap:12px;width:100%;box-sizing:border-box;padding:6px 12px 6px 6px;border-radius:20px;background:#F7F4FF;box-shadow:0 3px 0 #E4DCFA;text-align:left;font:inherit;color:var(--ink)}
+.castc canvas{flex:none;width:72px;height:72px}
+.castc .ct{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;line-height:1.25}
+.castc b{font-family:var(--display);font-weight:800;font-size:20px}
+.castc .cl{font-size:16px;font-weight:500;color:var(--ink2)}
+.castc.unmet{background:#F3F1F8;box-shadow:none}.castc.unmet b{color:var(--ink2)}
+/* settings (owner 2026-09-29, after Trail and Squishy): switches are buttons with role=switch, sliders follow the thumb */
+#settingsOv,#privacyOv{z-index:7}
+#settingsOv .sheet,#privacyOv .sheet{max-width:420px;text-align:left;padding:16px 16px 18px;max-height:100%;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;box-sizing:border-box}
+#settingsOv .top,#privacyOv .top{display:flex;align-items:center;gap:10px;margin:0 2px 4px}
+#settingsOv .top h2,#privacyOv .top h2{flex:1;margin:0;font-size:28px}
+.rb.x{background:#F3EEFF;box-shadow:0 3px 0 var(--lip)}.rb.x svg{width:22px;height:22px;color:var(--ink)}
+/* the rows fit the sheet: a grid track never grows past it (it grew to the widest row and cut the switches off, 2026-09-29) */
+.srows{display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
+.sgt{margin:10px 6px 0;font-family:Fredoka,system-ui,sans-serif;font-size:16px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ink2)}
+.sgroup{min-width:0;background:#F7F4FF;border-radius:20px;padding:2px 14px}
+.srow{display:flex;align-items:center;gap:12px;min-height:56px;width:100%;box-sizing:border-box;border-bottom:1.5px solid #ECE6FB}
+.sgroup>.srow:last-child,.sgroup>.vol:last-child{border-bottom:0}
+/* a switch and the slider it shows read as one row */
+.srow:has(+ .vol:not([hidden])){border-bottom:0;min-height:52px}
+.ico{flex:none;width:36px;height:36px;border-radius:12px;background:#fff;display:grid;place-items:center;box-shadow:0 2px 0 #E4DCFA}
+.ico svg{width:20px;height:20px;color:var(--ink)}
+.srow .lab{flex:1;min-width:0;font-size:18px;font-weight:600;color:var(--ink);display:flex;flex-direction:column;line-height:1.2}
+.srow .lab small{font-size:16px;font-weight:500;color:var(--ink2)}
+.srow.nav{background:none;padding:0;text-align:left;font:inherit;color:inherit}.srow.nav .chev{width:22px;height:22px;color:var(--ink2);flex:none}
+.sw{position:relative;flex:none;width:52px;height:32px;border-radius:999px;background:#D9D0F2;transition:background .15s;padding:0}
+.sw i{position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 2px 4px rgba(45,29,99,.25);transition:transform .15s}
+.sw[aria-checked="true"]{background:var(--pink)}
+.sw[aria-checked="true"] i{transform:translateX(20px)}
+.vol{display:flex;align-items:center;gap:12px;min-height:52px;padding:0 0 4px 48px;border-bottom:1.5px solid #ECE6FB;box-sizing:border-box}.vol[hidden]{display:none}
+.vol .vlab{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+/* a range input: its own horizontal pan (the page is touch-action:none), a 44 px touch box, a big thumb */
+input[type=range]{flex:1;min-width:0;height:44px;margin:0;background:transparent;touch-action:pan-x;-webkit-appearance:none;appearance:none}
+input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:999px;background:linear-gradient(90deg,var(--pink) var(--p,50%),#E4DCFA var(--p,50%))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:26px;height:26px;margin-top:-9px;border-radius:50%;background:#fff;border:0;box-shadow:0 1px 5px rgba(45,29,99,.35),0 0 0 3px var(--pink) inset}
+input[type=range]::-moz-range-track{height:8px;border-radius:999px;background:#E4DCFA}
+input[type=range]::-moz-range-progress{height:8px;border-radius:999px;background:var(--pink)}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid var(--pink);box-shadow:0 1px 5px rgba(45,29,99,.35)}
+.reset{position:relative;overflow:hidden;margin-top:14px;min-height:54px;border-radius:18px;background:#fff;color:#B4234F;font-size:18px;font-weight:700;border:2px solid #F6C9D6;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:none}
+.reset svg{position:relative;width:20px;height:20px}
+.reset span,.reset small{position:relative}.reset small{font-size:16px;font-weight:600;opacity:.7}
+.reset i{position:absolute;inset:0;width:0;background:#FFE1EA}
+.reset.holding i{animation:hold 1.2s linear forwards}
+@keyframes hold{to{width:100%}}
+#setVer{margin:12px 0 0;text-align:center;font-size:16px;color:var(--ink2)}
+.ptext{font-size:17px;line-height:1.45;color:var(--ink)}.ptext p{margin:8px 0;font-size:17px;color:var(--ink)}.ptext ul{margin:6px 0 6px 20px;padding:0}.ptext li{margin:4px 0}
+#home .rb.corner.left{right:auto;left:calc(14px + var(--sa-l))}
+/* the small music switch next to the gear (owner 2026-09-29): a slash while the music is off */
+#home .rb.corner.mini{right:auto;left:calc(70px + var(--sa-l));width:44px;height:44px;position:absolute}
+/* the quick sound buttons (sound-switch.ts): the home screen's Music, the Levels sheet's Music and Effects */
+.rb.mini{position:relative}.rb.mini svg{width:20px;height:20px;color:var(--ink)}
+.rb.mini .slash{position:absolute}.rb.mini[aria-pressed="true"] .slash{display:none}
+.rb.mini[aria-pressed="false"]{opacity:.7}
+#menu .top .rb.mini{width:44px;height:44px}
+#home .rb.corner svg,#menuSet svg{color:var(--ink)}
+@media (max-width:380px){#settingsOv .sheet,#privacyOv .sheet{padding:14px 12px 16px}.sgroup{padding:2px 10px}.srow{gap:10px}.ico{width:32px;height:32px;border-radius:10px}.vol{padding-left:42px}}
+@media (max-height:600px){.srow{min-height:48px}.vol{min-height:44px}.sgt{margin-top:4px}.reset{min-height:46px;margin-top:8px}}
+.tog[aria-pressed="true"]{background:#FFE3F0;color:var(--ink);box-shadow:0 3px 0 var(--pinkD)}
+.tog[aria-pressed="true"] svg{opacity:1}
+.tog:active{transform:translateY(2px)}
+@media (prefers-reduced-motion:reduce){#logo,#logo .drop,#logo .dash{animation:none}.sheet,#cardStars .st,#cardStars .st.show,#cardStars.after .st.lit,.bg,#bgA,#tw i,.grid button,.jelly.breathe,#stars .st.lost,#toastText{animation:none}#srow,#srow>*{transition:none}#cardStars .st{transform:none}.bg{transition:none}#tw{display:none}}
+
+#stars{height:22px}
+
+/* a phone on its side: the board beside the counter, hint and actions; home in two columns */
+@media (max-height:520px) and (orientation:landscape){
+.hud{height:56px;padding:0 14px}.rb,.hud .rb{width:40px;height:40px}.rb svg{width:20px;height:20px}.hud{grid-template-columns:40px 1fr 40px}
+#lvl{font-size:22px}#srow,#stars{height:18px}#lname{line-height:18px}.st{width:16px;height:16px}
+main{flex-direction:row;align-items:center;justify-content:center;gap:14px;padding:6px 12px 0;max-width:none}
+#wrap{width:auto}#side{width:auto;flex:0 1 300px;min-width:200px}
+#chain{height:48px;line-height:48px;font-size:40px;margin-top:0}
+#toastText{font-size:16px;padding:6px 12px}#acts{margin-top:6px;min-height:44px}
+#home{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;align-items:center;justify-items:center;gap:6px 20px;padding:max(12px,var(--sa-t)) max(20px,var(--sa-r)) max(12px,var(--sa-b)) max(20px,var(--sa-l))}
+/* the logo wide enough that the ribbon title stays at 16 px on a 568 px phone (issue #54) */
+#logo{width:min(51vw,300px);grid-column:1;grid-row:1}#heroCv{width:min(28vw,200px);grid-column:1;grid-row:2}
+#home .btns{grid-column:2;grid-row:1/3;width:min(40vw,300px)}
+#home .rb.corner{top:calc(8px + var(--sa-t));right:calc(10px + var(--sa-r))}
+#card .sheet{margin-top:60px}#cardCv{height:90px;margin-top:-70px}#cardStars{height:48px}#cardStars .st{width:40px;height:40px}#cardStars .st:nth-child(2){width:46px;height:46px}
+}
+/* tablets: scale the whole interface up instead of a phone-sized island */
+@media (min-width:700px) and (min-height:860px){
+.hud{max-width:820px;height:96px;grid-template-columns:64px 1fr 64px}
+.rb,.hud .rb{width:64px;height:64px}.rb svg{width:32px;height:32px}
+/* the music button stands clear of the bigger settings button (review 2026-10, #65: they overlapped on tablets and desktops) */
+#home .rb.corner.mini{left:calc(90px + var(--sa-l));top:calc(22px + var(--sa-t))}
+#lvl{font-size:38px}
+.st{width:28px;height:28px}#srow,#stars{height:32px}#lname{font-size:22px;line-height:32px;padding:0 14px;border-radius:16px}
+main{max-width:820px}
+#chain{font-size:66px;height:80px;line-height:80px}
+#toastSlot{height:56px}#toastText{font-size:22px;padding:10px 22px}
+#acts button{font-size:21px;padding:14px 24px}
+#logo{width:min(72vw,640px)}#heroCv{width:min(72vw,560px)}
+#home .btns{width:min(64vw,500px)}
+.jelly{font-size:28px;padding:18px 22px}.jelly.share{font-size:23px;padding:13px 32px}.jelly.share svg{width:26px;height:26px}.jelly small{font-size:20px}#home .row .jelly{font-size:24px}
+.sheet{max-width:520px}.sheet h2{font-size:40px}.sheet p{font-size:22px}
+#card .sheet{max-width:560px}#menu .sheet{max-width:620px}
+.grid button{font-size:26px}.tog{font-size:22px}
+/* the hint bulb is a hand's button on a tablet too, not a phone's */
+#acts #hintBtn{width:64px;height:64px;right:calc(24px + var(--sa-r));bottom:calc(24px + var(--sa-b))}#acts #hintBtn svg{width:40px;height:40px}
+}
+/* big tablets (an 11 or 13 inch iPad, review 2026-10 #131: the owner supports iPad): the board and its column grow
+   with the screen instead of stopping at the small tablet's size (board.ts MAX_BOARD_TABLET_LARGE) */
+@media (min-width:1000px) and (min-height:1100px){
+.hud{max-width:940px}main{max-width:940px}
+#lvl{font-size:44px}#lname{font-size:24px}
+#chain{font-size:76px;height:92px;line-height:92px}
+#logo{width:min(66vw,720px)}#heroCv{width:min(66vw,620px)}#home .btns{width:min(56vw,560px)}
+}
+</style>
+  <script type="module" crossorigin src="/assets/main-BTXeRzU0.js"></script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="gStar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF080"/><stop offset=".55" stop-color="#FFD83D"/><stop offset="1" stop-color="#F5B41A"/></linearGradient>
+    <linearGradient id="gStarOff" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3EFFF"/><stop offset="1" stop-color="#DAD2F4"/></linearGradient>
+    <linearGradient id="gFlame" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFD83D"/><stop offset=".6" stop-color="#FF8FB9"/><stop offset="1" stop-color="#FF5FA6"/></linearGradient>
+    <symbol id="s-on" viewBox="0 0 24 24"><path d="M12.00 3.40 L14.76 9.20 L21.13 10.03 L16.47 14.45 L17.64 20.77 L12.00 17.70 L6.36 20.77 L7.53 14.45 L2.87 10.03 L9.24 9.20Z" fill="url(#gStar)" stroke="#EDA812" stroke-width="2.4" stroke-linejoin="round"/><ellipse cx="9.4" cy="10.2" rx="2.4" ry="1.4" transform="rotate(-32 9.4 10.2)" fill="#fff" opacity=".75"/></symbol>
+    <symbol id="s-off" viewBox="0 0 24 24"><path d="M12.00 3.40 L14.76 9.20 L21.13 10.03 L16.47 14.45 L17.64 20.77 L12.00 17.70 L6.36 20.77 L7.53 14.45 L2.87 10.03 L9.24 9.20Z" fill="url(#gStarOff)" stroke="#CFC5EE" stroke-width="2.4" stroke-linejoin="round"/></symbol>
+    <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 2.5c1.2 3.6 5.8 5.6 5.8 11a5.8 5.8 0 0 1-11.6 0c0-2.4 1.1-4.2 2.4-5.3.1 2.3 1.1 3.4 2.2 3.6-.5-3.4.2-6.2 1.2-9.3z" fill="url(#gFlame)" stroke="#E64D92" stroke-width="1.4" stroke-linejoin="round"/><ellipse cx="10.4" cy="15" rx="1.5" ry="2.4" fill="#fff" opacity=".6"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="3.2" fill="#B8ADE3"/><path d="M8.3 10.5V8a3.7 3.7 0 0 1 7.4 0v2.5" fill="none" stroke="#B8ADE3" stroke-width="2.6"/><circle cx="12" cy="15.4" r="1.6" fill="#fff"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#5FD98A"/><path d="M7.5 12.4l3 3 6-6.4" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><g stroke-width="3" stroke-linecap="round"><path d="M4.5 6.5h15M4.5 12h15" stroke="#2D1D63"/><path d="M4.5 17.5h15" stroke="#FF6FAF"/></g></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><g fill="none" stroke="#2D1D63" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><path d="M3.5 11 12 4l8.5 7"/><path d="M6 9.5V20h12V9.5"/></g></symbol>
+    <symbol id="i-spk" viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="#2D1D63" stroke="#2D1D63" stroke-width="1.6" stroke-linejoin="round"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11" fill="none" stroke="#FF6FAF" stroke-width="2.2" stroke-linecap="round"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" fill="none" stroke="#2D1D63" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <!-- settings icons: Lucide, ISC license, https://lucide.dev -->
+    <symbol id="i-gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="l-volume" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></symbol>
+    <symbol id="l-music" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></symbol>
+    <symbol id="l-vibrate" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2 8 2 2-2 2 2 2-2 2"/><path d="m22 8-2 2 2 2-2 2 2 2"/><rect width="8" height="14" x="8" y="5" rx="1"/></symbol>
+    <symbol id="l-slow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22h14M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></symbol><symbol id="l-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></symbol>
+    <symbol id="l-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="l-reset" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></symbol>
+    <symbol id="l-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+    <symbol id="l-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></symbol>
+    <symbol id="l-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></symbol>
+    <symbol id="i-note" viewBox="0 0 24 24"><path d="M9 18.5V6l10-2v11.5" fill="none" stroke="#2D1D63" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="18.5" r="2.8" fill="#FF6FAF"/><circle cx="16.5" cy="15.5" r="2.8" fill="#FF6FAF"/></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24"><g fill="none" stroke="#2D1D63" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 9.5H7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2h-1.5"/><path d="M12 14.5V3.5M8.3 7 12 3.3 15.7 7"/></g></symbol>
+    <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 2.5C15 7 18.5 10.4 18.5 14.4a6.5 6.5 0 0 1-13 0C5.5 10.4 9 7 12 2.5z" fill="#74CFFF" stroke="#3FA6E8" stroke-width="1.4"/><ellipse cx="9.6" cy="14" rx="1.5" ry="2.4" fill="#fff" opacity=".7"/></symbol>
+  </defs>
+</svg>
+<div id="bgA" class="bg bg-meadow"></div><div id="bgB" class="bg"></div><div id="tw"></div><div id="dim"></div>
+<canvas id="confetti" aria-hidden="true" hidden></canvas>
+<div id="app">
+<header class="hud">
+  <button id="homeBtn" class="rb" aria-label="Home"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-home"/></svg></button>
+  <div id="title"><span id="lvl">Level 1</span><span id="srow"><span id="lname"></span><span id="stars"></span></span></div>
+  <button id="menu-btn" class="rb" aria-label="Levels and settings"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-menu"/></svg></button>
+</header>
+<main>
+<div id="wrap"><div class="slab"><canvas id="board" aria-label="Game board"></canvas></div><div id="praise" aria-live="polite" hidden></div><svg id="arrow" aria-hidden="true" hidden><g id="arrowG"><g id="arrowM"><polygon id="arrowP" points="0,0" stroke-width="4" stroke-linejoin="round" paint-order="stroke"/></g></g></svg><p id="arrowSay" class="say" aria-live="polite"></p></div>
+<div id="side">
+<i id="chainFx" aria-hidden="true"></i>
+<div id="chain" aria-live="polite"></div>
+<div id="toastSlot"><div id="toast" role="status" aria-live="polite" hidden><span id="toastText"></span></div></div>
+<div id="acts">
+  <button id="hintBtn" aria-disabled="true" aria-pressed="false" aria-label="Hint, no stars this time"><svg viewBox="0 0 24 24" aria-hidden="true"><g class="rays" stroke="#F0B91F" stroke-width="1.8" stroke-linecap="round"><path d="M12 .2v1.6M3.4 3.6l1.2 1.2M20.6 3.6l-1.2 1.2M.6 10.6h1.6M21.8 10.6h1.6"/></g><path class="glass" d="M12 3.4a6 6 0 0 0-3.4 11c.6.5 1 1.1 1 1.9v.5h4.8v-.5c0-.8.4-1.4 1-1.9A6 6 0 0 0 12 3.4z" stroke-width="1.6" stroke-linejoin="round"/><path class="wire" d="M10.3 16.6v-3.4l1.7-1.6 1.7 1.6v3.4" fill="none" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><ellipse class="gleam" cx="9.9" cy="8.2" rx="1.3" ry="2.1" transform="rotate(30 9.9 8.2)" fill="#fff" fill-opacity=".8"/><path d="M9.6 19.4h4.8M10.4 21.6h3.2" stroke="#2D1D63" stroke-width="2" stroke-linecap="round"/></svg></button>
+  <button id="retryBtn" hidden><svg viewBox="0 0 24 24" fill="none" stroke="#2D1D63" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 1 2.3 5.7"/><path d="M4 18v-6h6"/></svg>Try again</button>
+</div>
+</div>
+</main>
+</div>
+<section id="home" aria-label="The Droplis Adventures in Dropliland">
+  <svg id="logo" viewBox="0 0 420 236" role="img" aria-label="The Droplis Adventures in Dropliland">
+    <defs>
+      <linearGradient id="lgInk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4A3596"/><stop offset="1" stop-color="#24145E"/></linearGradient>
+      <linearGradient id="lgDrop" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFA7CF"/><stop offset=".5" stop-color="#FF6FAF"/><stop offset="1" stop-color="#E64D92"/></linearGradient>
+      <linearGradient id="lgRib" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFA7CF"/><stop offset=".55" stop-color="#FF7DB8"/><stop offset="1" stop-color="#F0579C"/></linearGradient>
+      <linearGradient id="lgTail" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F0579C"/><stop offset="1" stop-color="#D9478A"/></linearGradient>
+      <filter id="ribShadow" x="-10%" y="-30%" width="120%" height="160%"><feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#2D1D63" flood-opacity=".28"/></filter>
+      <path id="ribPath" d="M110 114 Q500 174 890 114"/>
+    </defs>
+    <g id="logoDashL" transform="translate(44.7 103.6)"><g class="dash" stroke="#B98CFF" stroke-width="9" stroke-linecap="round"><path d="M-8 -34 l-15 -14"/><path d="M-10 0 l-21 -2"/></g></g>
+    <g id="logoDashR" transform="translate(371.2 103.6)"><g class="dash" stroke="#B98CFF" stroke-width="9" stroke-linecap="round" style="animation-delay:.25s"><path d="M8 -34 l15 -14"/><path d="M10 0 l21 -2"/></g></g>
+    <g font-family="Sniglet, Fredoka, sans-serif" font-weight="800" text-anchor="middle">
+      <text id="logoShadow" x="212" y="146" font-size="79" dy="0 -3 4 -5 4 -5 4" rotate="-4 2 -3 3 -2 3 -3" fill="#B7A9E6" stroke="#B7A9E6" stroke-width="18" stroke-linejoin="round" opacity=".6">Droplıs</text>
+      <text id="logoUnder" x="210" y="140" font-size="79" dy="0 -3 4 -5 4 -5 4" rotate="-4 2 -3 3 -2 3 -3" fill="#fff" stroke="#fff" stroke-width="18" stroke-linejoin="round">Droplıs</text>
+      <text id="logoWord" x="210" y="140" font-size="79" dy="0 -3 4 -5 4 -5 4" rotate="-4 2 -3 3 -2 3 -3" fill="url(#lgInk)" stroke="#fff" stroke-width="18" stroke-linejoin="round" paint-order="stroke">Droplıs</text>
+    </g>
+    <g id="logoDrop" transform="translate(307.7 81.6) scale(1.20)"><g class="drop"><path d="M0 -22 C8 -10 15 -2 15 7 A15 15 0 0 1 -15 7 C-15 -2 -8 -10 0 -22Z" fill="url(#lgDrop)" stroke="#fff" stroke-width="5" stroke-linejoin="round" paint-order="stroke"/><ellipse cx="-5" cy="2" rx="4" ry="6" transform="rotate(20 -5 2)" fill="#fff" opacity=".75"/></g></g>
+    <!-- the ribbon (issue #54): the owner's centred banner (Claude Design "Banner.svg", 980x190) scaled into the logo; the title arc is
+         centred on the band, the swallowtails carry dark folds, a highlight above and a shade below the title, one soft drop shadow; the title is held to
+         680 of the band's 716 units between its folds (textLength), so it fits in any font, at the same height; it starts
+         (783 - 680) / 2 = 51.5 along the 783-unit arc, because WebKit drops text-anchor middle once textLength is set (owner 2026-09-28) -->
+    <g id="logoRib" transform="translate(-8 155.5) scale(.4357)">
+      <g filter="url(#ribShadow)" stroke="#fff" stroke-width="10" stroke-linejoin="round">
+        <path d="M142 78 L28 78 L64 120 L28 162 L142 162Z" fill="url(#lgTail)"/>
+        <path d="M858 78 L972 78 L936 120 L972 162 L858 162Z" fill="url(#lgTail)"/>
+        <path d="M110 50 Q500 110 890 50 L890 140 Q500 200 110 140Z" fill="url(#lgRib)"/>
+      </g>
+      <path d="M110 140 L142 144.5 L142 162Z" fill="#B8306F" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M890 140 L858 144.5 L858 162Z" fill="#B8306F" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M150 68 Q500 121 850 68" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="6" stroke-linecap="round"/>
+      <path d="M170 152 Q500 200 830 152" fill="none" stroke="#C93F80" stroke-opacity=".35" stroke-width="4" stroke-linecap="round"/>
+      <text font-family="Sniglet, Fredoka, sans-serif" font-weight="800" font-size="54" fill="#fff" stroke="#C93F80" stroke-width="10" stroke-linejoin="round" paint-order="stroke"><textPath href="#ribPath" startOffset="51.5" textLength="680" lengthAdjust="spacingAndGlyphs">Adventures in Dropliland</textPath></text>
+    </g>
+  </svg>
+  <button id="homeSet" class="rb corner left" aria-label="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-gear"/></svg></button>
+  <button id="homeMus" class="rb corner mini" aria-label="Music" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#l-music"/></svg><svg class="slash" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
+  <button id="homeMenu" class="rb corner" aria-label="Levels"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-menu"/></svg></button>
+  <canvas id="heroCv" aria-hidden="true"></canvas>
+  <div class="btns">
+    <button id="playBtn" class="jelly">Play<small id="playSub"></small></button>
+    <button id="homeDaily" class="jelly yellow">Daily<small id="homeStreak"></small></button>
+  </div>
+</section>
+<div id="card" class="ov" hidden><div class="sheet"><canvas id="cardCv" aria-hidden="true"></canvas><div id="cardStars"></div><h2 id="cardT" hidden></h2><button id="cardB" class="jelly">Next</button><button id="cardC" class="jelly share" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-share"/></svg>Share</button></div></div>
+<div id="intro" class="ov" hidden><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="introT" aria-describedby="introS"><div class="banner" id="introBanner"><button id="introPrev" class="rb arrow" aria-label="Previous piece" hidden><svg viewBox="0 0 24 24" aria-hidden="true" style="transform:scaleX(-1)"><use href="#i-chev"/></svg></button><canvas id="introCv" aria-hidden="true"></canvas><button id="introNext" class="rb arrow" aria-label="Next piece" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chev"/></svg></button></div><h2 id="introT"></h2><p id="introS"></p><button id="introB" class="jelly">Let's go</button></div></div>
+<div id="menu" class="ov" hidden><div class="sheet"><div class="top"><button id="menuHome" class="rb" aria-label="Home"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-home"/></svg></button><h2>Levels</h2><button id="menuSnd" class="rb mini" aria-label="Sound effects" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#l-volume"/></svg><svg class="slash" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button><button id="menuMus" class="rb mini" aria-label="Music" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#l-music"/></svg><svg class="slash" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button><button id="menuX" class="rb" aria-label="Close"><svg viewBox="0 0 24 24" stroke="#2D1D63" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+<div id="path" class="grid"></div>
+<div id="settings"><button id="menuCast" class="tog"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-drop"/></svg>Droplis</button><button id="menuSet" class="tog"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-gear"/></svg>Settings</button></div></div></div>
+<div id="castOv" class="ov" hidden><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="castT"><div class="top"><h2 id="castT">The Droplis</h2><button id="castX" class="rb x" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#l-x"/></svg></button></div><ul id="castList"></ul></div></div>
+<div id="settingsOv" class="ov" hidden><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="setT"><div class="top"><h2 id="setT">Settings</h2><button id="setX" class="rb x" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#l-x"/></svg></button></div><div class="srows"><h3 class="sgt">Sound</h3><div class="sgroup"><div class="srow"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#l-volume"/></svg></span><span class="lab">Sound effects</span><button id="sndT" class="sw" role="switch" aria-checked="true" aria-label="Sound effects"><i></i></button></div><label id="sndVolRow" class="vol"><span class="vlab">Volume</span><input id="sndVol" type="range" min="0" max="100" step="5" aria-label="Sound effects volume"></label><div class="srow"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#l-music"/></svg></span><span class="lab">Music</span><button id="musT" class="sw" role="switch" aria-checked="true" aria-label="Music"><i></i></button></div><label id="musVolRow" class="vol"><span class="vlab">Volume</span><input id="musVol" type="range" min="0" max="100" step="1" aria-label="Music volume"></label></div><h3 id="vibH" class="sgt">Touch</h3><div id="vibG" class="sgroup"><div class="srow"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#l-vibrate"/></svg></span><span id="vibL" class="lab">Vibration</span><button id="vibT" class="sw" role="switch" aria-checked="true" aria-label="Vibration"><i></i></button></div><label id="vibVolRow" class="vol"><span class="vlab">Strength</span><input id="vibVol" type="range" min="10" max="100" step="5" aria-label="Vibration strength"></label></div><h3 class="sgt">Game</h3><div class="sgroup"><div class="srow"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#l-slow"/></svg></span><span class="lab">Slow-mo finish<small>Time slows for the last pop</small></span><button id="slowT" class="sw" role="switch" aria-checked="true" aria-label="Slow-mo finish"><i></i></button></div></div><h3 class="sgt">Privacy</h3><div class="sgroup"><div class="srow"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#l-chart"/></svg></span><span class="lab">Play counts<small>Anonymous, no tracking</small></span><button id="anaT" class="sw" role="switch" aria-checked="true" aria-label="Play counts"><i></i></button></div><button id="privB" class="srow nav"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#l-shield"/></svg></span><span class="lab">Privacy<small>What we count</small></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><use href="#l-chev"/></svg></button></div><button id="resetB" class="reset"><i></i><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#l-reset"/></svg><span>Reset everything</span><small>Hold</small></button><p id="setVer"></p></div></div></div><div id="privacyOv" class="ov" hidden><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="privT"><div class="top"><button id="privX" class="rb x" aria-label="Back"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#l-back"/></svg></button><h2 id="privT">What we count</h2></div><div class="ptext"><p>While Play counts is on, Droplis counts:</p><ul><li>that the game opened, and your furthest level</li><li>how many new or made over levels an update brought you</li><li>levels started, cleared, cleared with a hint, or missed, with the stars and how many Droplis popped</li><li>hints, and the daily board</li><li>the size of your screen</li><li>whether the sound started</li><li>that the game hit an error, and where in its code</li></ul><p>Each count is a name and a few small numbers. No cookies, no ID, nothing that tells players apart. Cloudflare delivers the counts, like every page of this site, and they are never linked to you.</p><p>Your progress stays on this device. Turn the switch off and counting stops at once.</p></div></div></div>
+</body>
+</html>

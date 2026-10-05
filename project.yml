@@ -1,0 +1,58 @@
+name: Droplis
+options:
+  bundleIdPrefix: com.franzai
+  deploymentTarget:
+    iOS: "18.0"
+  xcodeVersion: "26.4.1"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    MARKETING_VERSION: "2.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    DEVELOPMENT_TEAM: 7D2YX5DQ6M
+    CODE_SIGN_STYLE: Manual
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED: YES
+
+targets:
+  Droplis:
+    type: application
+    platform: iOS
+    sources:
+      - path: Sources
+      - path: Resources/Assets.xcassets
+      - path: Resources/Info.plist
+      - path: Resources/PrivacyInfo.xcprivacy
+      - path: WebContent
+        buildPhase: resources
+        type: folder
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.franzai.droplis
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS: "YES"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: "NO"
+        IPHONEOS_DEPLOYMENT_TARGET: "18.0"
+        INFOPLIST_FILE: "Resources/Info.plist"
+        GENERATE_INFOPLIST_FILE: "NO"
+      configs:
+        Debug:
+          CODE_SIGN_IDENTITY: "-"
+          CODE_SIGN_STYLE: Automatic
+          PROVISIONING_PROFILE_SPECIFIER: ""
+        Release:
+          CODE_SIGN_IDENTITY: "Apple Distribution: Franz Enzenhofer (7D2YX5DQ6M)"
+          CODE_SIGN_STYLE: Manual
+          PROVISIONING_PROFILE_SPECIFIER: "Droplis App Store"
+    entitlements:
+      path: Resources/Droplis.entitlements
+  DroplisTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Tests
+    dependencies:
+      - target: Droplis

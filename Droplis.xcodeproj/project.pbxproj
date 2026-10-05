@@ -1,0 +1,453 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2B214C09CF4B69559C5353C4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E35A7B92F5ADC5885C8BA100 /* Assets.xcassets */; };
+		506CB314D084B5FCDF3ECDAD /* AppSchemeHandlerPathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E4DC3B85EE64221DBA4D053 /* AppSchemeHandlerPathTests.swift */; };
+		67F72EBCDCC148A31ED7E418 /* WebContent in Resources */ = {isa = PBXBuildFile; fileRef = 3BD5C9A91FEAEC2D80D3791B /* WebContent */; };
+		9F83384C99B8DEFAB840E274 /* GameWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F02A0EB97CE5E90BF23AB25E /* GameWebView.swift */; };
+		C34BA56F9D54ADEB007E2F6F /* DroplisApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659FA7DEECD0CE11FB7F65FC /* DroplisApp.swift */; };
+		E1B03FC0E33DAF30FE58C528 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = C01647B78D5DFD71EE2586F4 /* PrivacyInfo.xcprivacy */; };
+		F3498B24EC93A4748410B050 /* AppSchemeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68160D93ABB98CA7110E4AF1 /* AppSchemeHandler.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		DEA695A3DFAD603B62C071FE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8C8192936A541F2A78C2E3AB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F2E3B822D7E54980E554F48D;
+			remoteInfo = Droplis;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		3BD5C9A91FEAEC2D80D3791B /* WebContent */ = {isa = PBXFileReference; lastKnownFileType = folder; path = WebContent; sourceTree = SOURCE_ROOT; };
+		659FA7DEECD0CE11FB7F65FC /* DroplisApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DroplisApp.swift; sourceTree = "<group>"; };
+		68160D93ABB98CA7110E4AF1 /* AppSchemeHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSchemeHandler.swift; sourceTree = "<group>"; };
+		8E4DC3B85EE64221DBA4D053 /* AppSchemeHandlerPathTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSchemeHandlerPathTests.swift; sourceTree = "<group>"; };
+		907AD1267EBE01D43C409ED7 /* Droplis.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Droplis.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		934F44CE5D694341584F0F2B /* DroplisTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = DroplisTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B91514159046E46E66256A4F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		C01647B78D5DFD71EE2586F4 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		E35A7B92F5ADC5885C8BA100 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F02A0EB97CE5E90BF23AB25E /* GameWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameWebView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		2001EEE474EE119D3AD9C8A0 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				8E4DC3B85EE64221DBA4D053 /* AppSchemeHandlerPathTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		40B902995C2B3B1350FD18EE = {
+			isa = PBXGroup;
+			children = (
+				3BD5C9A91FEAEC2D80D3791B /* WebContent */,
+				AEB36C5439BAE6BD8A3B6E98 /* Resources */,
+				8B0D572C149D671F94C54D79 /* Sources */,
+				2001EEE474EE119D3AD9C8A0 /* Tests */,
+				7439D23888C1A65C9FAC2926 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		7439D23888C1A65C9FAC2926 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				907AD1267EBE01D43C409ED7 /* Droplis.app */,
+				934F44CE5D694341584F0F2B /* DroplisTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8B0D572C149D671F94C54D79 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				68160D93ABB98CA7110E4AF1 /* AppSchemeHandler.swift */,
+				659FA7DEECD0CE11FB7F65FC /* DroplisApp.swift */,
+				F02A0EB97CE5E90BF23AB25E /* GameWebView.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		AEB36C5439BAE6BD8A3B6E98 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				E35A7B92F5ADC5885C8BA100 /* Assets.xcassets */,
+				B91514159046E46E66256A4F /* Info.plist */,
+				C01647B78D5DFD71EE2586F4 /* PrivacyInfo.xcprivacy */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C33995593E7AEEBA3E0C28DC /* DroplisTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BEDDDA548C9D098C0F2C00B6 /* Build configuration list for PBXNativeTarget "DroplisTests" */;
+			buildPhases = (
+				6DAF01C41EC53FC2588E2C8E /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6E1E5EA285D22EE69BBB2F84 /* PBXTargetDependency */,
+			);
+			name = DroplisTests;
+			packageProductDependencies = (
+			);
+			productName = DroplisTests;
+			productReference = 934F44CE5D694341584F0F2B /* DroplisTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		F2E3B822D7E54980E554F48D /* Droplis */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B5CE0ADD509AFBBDF5527F2F /* Build configuration list for PBXNativeTarget "Droplis" */;
+			buildPhases = (
+				9A385777AC24C0A043AE7389 /* Sources */,
+				FCE2D9BBC66A8647EEBCE7FC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Droplis;
+			packageProductDependencies = (
+			);
+			productName = Droplis;
+			productReference = 907AD1267EBE01D43C409ED7 /* Droplis.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		8C8192936A541F2A78C2E3AB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 2641;
+				TargetAttributes = {
+					C33995593E7AEEBA3E0C28DC = {
+						DevelopmentTeam = 7D2YX5DQ6M;
+						ProvisioningStyle = Manual;
+					};
+					F2E3B822D7E54980E554F48D = {
+						DevelopmentTeam = 7D2YX5DQ6M;
+					};
+				};
+			};
+			buildConfigurationList = 9F0605BF6F622FD317EA51B8 /* Build configuration list for PBXProject "Droplis" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 40B902995C2B3B1350FD18EE;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 7439D23888C1A65C9FAC2926 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F2E3B822D7E54980E554F48D /* Droplis */,
+				C33995593E7AEEBA3E0C28DC /* DroplisTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		FCE2D9BBC66A8647EEBCE7FC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2B214C09CF4B69559C5353C4 /* Assets.xcassets in Resources */,
+				E1B03FC0E33DAF30FE58C528 /* PrivacyInfo.xcprivacy in Resources */,
+				67F72EBCDCC148A31ED7E418 /* WebContent in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6DAF01C41EC53FC2588E2C8E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				506CB314D084B5FCDF3ECDAD /* AppSchemeHandlerPathTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9A385777AC24C0A043AE7389 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F3498B24EC93A4748410B050 /* AppSchemeHandler.swift in Sources */,
+				C34BA56F9D54ADEB007E2F6F /* DroplisApp.swift in Sources */,
+				9F83384C99B8DEFAB840E274 /* GameWebView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		6E1E5EA285D22EE69BBB2F84 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F2E3B822D7E54980E554F48D /* Droplis */;
+			targetProxy = DEA695A3DFAD603B62C071FE /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1577C0861772FEAAC5F01BB7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 7D2YX5DQ6M;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 2.0.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		41FE03BC2B3AFADF3FBCCBB1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = Resources/Droplis.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.franzai.droplis;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = iphoneos;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A9E013D7036A2860D5441210 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = Resources/Droplis.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Distribution: Franz Enzenhofer (7D2YX5DQ6M)";
+				CODE_SIGN_STYLE = Manual;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.franzai.droplis;
+				PROVISIONING_PROFILE_SPECIFIER = "Droplis App Store";
+				SDKROOT = iphoneos;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		CDE86F434D2775890348D39D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 7D2YX5DQ6M;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 2.0.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		EB85D9ACD248639E200B6820 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.franzai.DroplisTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Droplis.app/Droplis";
+			};
+			name = Debug;
+		};
+		EF20E973947F6B2D2AD2430F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.franzai.DroplisTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Droplis.app/Droplis";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9F0605BF6F622FD317EA51B8 /* Build configuration list for PBXProject "Droplis" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1577C0861772FEAAC5F01BB7 /* Debug */,
+				CDE86F434D2775890348D39D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		B5CE0ADD509AFBBDF5527F2F /* Build configuration list for PBXNativeTarget "Droplis" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				41FE03BC2B3AFADF3FBCCBB1 /* Debug */,
+				A9E013D7036A2860D5441210 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		BEDDDA548C9D098C0F2C00B6 /* Build configuration list for PBXNativeTarget "DroplisTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EB85D9ACD248639E200B6820 /* Debug */,
+				EF20E973947F6B2D2AD2430F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 8C8192936A541F2A78C2E3AB /* Project object */;
+}
