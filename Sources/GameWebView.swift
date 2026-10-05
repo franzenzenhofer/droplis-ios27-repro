@@ -37,8 +37,10 @@ struct GameWebView: UIViewRepresentable {
         webView.navigationDelegate = context.coordinator
         webView.uiDelegate = context.coordinator
         // the launch screen's colour (light and dark, the LaunchBackground colour set), so nothing flashes between it
-        // and the page's first paint
-        guard let launchBackground = UIColor(named: "LaunchBackground") else { fatalError("the LaunchBackground colour set is missing") }
+        // and the page's first paint. make-app writes the set and preflight refuses a project without it, so a
+        // missing one is a broken build, never a reason to stop a launch: it is logged, and the page paints a moment later
+        let launchBackground = UIColor(named: "LaunchBackground")
+        if launchBackground == nil { AppLog.webView.fault("the LaunchBackground colour set is missing from the asset catalog") }
         webView.isOpaque = false
         webView.backgroundColor = launchBackground
         webView.scrollView.backgroundColor = launchBackground
@@ -122,10 +124,27 @@ struct GameWebView: UIViewRepresentable {
         }
 
         // WebKit ends the page's process under memory pressure or while the app
-        // sits in the background. Left alone, the app shows an empty web view
-        // until it is killed and relaunched; a reload brings the game back.
+        // sits in the background ("WebKit calls this method when the process for
+        // the specified web view terminates for any reason",
+        // https://developer.apple.com/documentation/webkit/wknavigationdelegate/webviewwebcontentprocessdidterminate(_:)).
+        // Left alone, the app shows an empty web view until it is killed and
+        // relaunched; a reload brings the game back. A page whose process dies at
+        // every load would reload for ever and look like a launch that hangs, so
+        // the reloads are bounded: every termination is logged, and after
+        // maxWebProcessReloads of them within the window the view is left as it is.
+        private static let maxWebProcessReloads = 3
+        private static let webProcessReloadWindow: TimeInterval = 300
+        private var webProcessTerminations: [Date] = []
+
         func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
-            AppLog.webView.error("web content process terminated, reloading \(webView.url?.absoluteString ?? "(no url)", privacy: .public)")
+            let now = Date()
+            webProcessTerminations = webProcessTerminations.filter { now.timeIntervalSince($0) < Self.webProcessReloadWindow } + [now]
+            let url = webView.url?.absoluteString ?? "(no url)"
+            guard webProcessTerminations.count <= Self.maxWebProcessReloads else {
+                AppLog.webView.fault("web content process terminated \(self.webProcessTerminations.count, privacy: .public) times in \(Self.webProcessReloadWindow, privacy: .public) s, not reloading again: \(url, privacy: .public)")
+                return
+            }
+            AppLog.webView.error("web content process terminated (reload \(self.webProcessTerminations.count, privacy: .public) of \(Self.maxWebProcessReloads, privacy: .public)): \(url, privacy: .public)")
             webView.reload()
         }
     }
@@ -149,42 +168,52 @@ enum AppLog {
 /// ends and after the media services reset - and each of those moments reaches
 /// the page as `iosmaker:audio` with the secondary-audio hint, because only
 /// the page knows which of its sounds is the soundtrack.
+///
+/// Every AVAudioSession call runs on one private serial queue, never on the
+/// main thread: setActive is a round trip to the audio server that iOS 27
+/// reports as a hang risk on the main thread ("This method can lead to UI
+/// unresponsiveness if called on the main thread",
+/// https://github.com/superuser404notfound/AetherEngine/issues/538), and a
+/// launch that waits for mediaserverd is a launch the watchdog can kill. The
+/// page's event follows the call it reports, from the main actor.
 @MainActor
 final class AudioSessionBridge {
     private weak var webView: WKWebView?
     private var observers: [any NSObjectProtocol] = []
+    private static let queue = DispatchQueue(label: "com.franzai.droplis.audio-session", qos: .userInitiated)
 
     func start(_ webView: WKWebView) {
         self.webView = webView
         configure()
         let center = NotificationCenter.default
         let session = AVAudioSession.sharedInstance()
+        // The blocks run on the main queue ("The operation queue where the block runs",
+        // https://developer.apple.com/documentation/foundation/notificationcenter/addobserver(forname:object:queue:using:)),
+        // but the compiler cannot see that, and MainActor.assumeIsolated "will crash with a fatal error" when its
+        // guess is wrong (https://developer.apple.com/documentation/swift/mainactor/assumeisolated(_:file:line:)).
+        // A Task hops to the main actor instead: one more turn of the run loop, never a trap.
         observers = [
             center.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] _ in
-                MainActor.assumeIsolated {
-                    self?.activate()
-                    self?.send("active")
-                }
+                Task { @MainActor [weak self] in self?.activate(then: "active") }
             },
             center.addObserver(forName: AVAudioSession.interruptionNotification, object: session, queue: .main) { [weak self] note in
                 let raw = (note.userInfo?[AVAudioSessionInterruptionTypeKey] as? NSNumber)?.uintValue
-                MainActor.assumeIsolated { self?.interrupted(raw) }
+                Task { @MainActor [weak self] in self?.interrupted(raw) }
             },
             center.addObserver(forName: AVAudioSession.silenceSecondaryAudioHintNotification, object: session, queue: .main) { [weak self] _ in
-                MainActor.assumeIsolated { self?.send("secondary") }
+                Task { @MainActor [weak self] in self?.send("secondary") }
             },
             center.addObserver(forName: AVAudioSession.mediaServicesWereResetNotification, object: session, queue: .main) { [weak self] _ in
-                MainActor.assumeIsolated {
+                Task { @MainActor [weak self] in
                     self?.configure()
-                    self?.activate()
-                    self?.send("reset")
+                    self?.activate(then: "reset")
                 }
             }
         ]
         // an app that is already active when the view is made gets no
         // didBecomeActive for this launch
         if UIApplication.shared.applicationState == .active {
-            activate()
+            activate(then: nil)
         }
     }
 
@@ -198,32 +227,51 @@ final class AudioSessionBridge {
             send("interruption-began")
         case .ended:
             // always, whatever shouldResume says: a game resumes its sound effects
-            activate()
-            send("interruption-ended")
+            activate(then: "interruption-ended")
         @unknown default:
             AppLog.audio.error("unknown interruption type \(raw, privacy: .public)")
         }
     }
 
+    /// The category, on the queue; "Typically, you set the category and mode before activating the session"
+    /// (https://developer.apple.com/documentation/avfaudio/avaudiosession/setcategory(_:mode:options:)), and the
+    /// serial queue keeps that order.
     private func configure() {
-        do {
-            try AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default)
-        } catch {
-            AppLog.audio.error("setCategory(.ambient) failed: \(error.localizedDescription, privacy: .public)")
+        Self.queue.async {
+            do {
+                try AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default)
+            } catch {
+                AppLog.audio.error("setCategory(.ambient) failed: \(error.localizedDescription, privacy: .public)")
+            }
         }
     }
 
-    private func activate() {
-        do {
-            try AVAudioSession.sharedInstance().setActive(true)
-        } catch {
-            AppLog.audio.error("setActive(true) failed: \(error.localizedDescription, privacy: .public)")
+    /// Activates on the queue, then (when asked) tells the page which moment this was, with the hint as it stood
+    /// right after the activation.
+    private func activate(then kind: String?) {
+        Self.queue.async { [weak self] in
+            do {
+                try AVAudioSession.sharedInstance().setActive(true)
+            } catch {
+                AppLog.audio.error("setActive(true) failed: \(error.localizedDescription, privacy: .public)")
+            }
+            if let kind { Self.deliver(kind, to: self) }
         }
     }
 
+    /// A moment that needs no activation, in line behind every call already queued.
     private func send(_ kind: String) {
+        Self.queue.async { [weak self] in Self.deliver(kind, to: self) }
+    }
+
+    /// The hint is the session's and is read on its queue; the event reaches the page on the main actor.
+    nonisolated private static func deliver(_ kind: String, to bridge: AudioSessionBridge?) {
         let otherAudio = AVAudioSession.sharedInstance().secondaryAudioShouldBeSilencedHint
         AppLog.audio.notice("\(kind, privacy: .public) otherAudio=\(otherAudio, privacy: .public)")
+        Task { @MainActor in bridge?.dispatch(kind, otherAudio: otherAudio) }
+    }
+
+    private func dispatch(_ kind: String, otherAudio: Bool) {
         let script = "window.dispatchEvent(new CustomEvent('iosmaker:audio', {detail:{kind:'\(kind)', otherAudio:\(otherAudio)}}))"
         webView?.evaluateJavaScript(script) { _, error in
             if let error {
@@ -269,6 +317,14 @@ final class ConsoleBridge: NSObject, WKScriptMessageHandler {
 /// of buzzes and pauses; only its first buzz is played, because UIKit has
 /// nothing to sustain a rhythm with and a burst of generators fires as one blur
 /// anyway. Zero means cancel, and there is nothing running to cancel.
+/// The generators are made the first time the page asks for a haptic, never at
+/// launch: a launch touches nothing of the Taptic Engine. Each is tied to the
+/// web view with init(style:view:) / init(view:) (iOS 17.5,
+/// https://developer.apple.com/documentation/uikit/uiimpactfeedbackgenerator/init(style:view:)),
+/// the replacement for init(style:), deprecated in iOS 27
+/// (https://developer.apple.com/documentation/uikit/uiimpactfeedbackgenerator/init(style:)).
+/// WKScriptMessageHandler runs on the main actor, and so does this class.
+@MainActor
 final class HapticBridge: NSObject, WKScriptMessageHandler {
     static let name = "haptic"
 
@@ -286,38 +342,36 @@ final class HapticBridge: NSObject, WKScriptMessageHandler {
         "heavy": .heavy
     ]
 
-    private let impacts = Dictionary(uniqueKeysWithValues: HapticBridge.styles.values.map { ($0, UIImpactFeedbackGenerator(style: $0)) })
-    private let selection = UISelectionFeedbackGenerator()
-    private let notification = UINotificationFeedbackGenerator()
-
-    override init() {
-        super.init()
-        // prepared up front: an unprepared generator can take a moment to spin
-        // up the Taptic engine, which is exactly the moment we are trying to hit
-        impacts.values.forEach { $0.prepare() }
-        selection.prepare()
-        notification.prepare()
-    }
+    private var impacts: [UIImpactFeedbackGenerator.FeedbackStyle: UIImpactFeedbackGenerator] = [:]
+    private var selection: UISelectionFeedbackGenerator?
+    private var notification: UINotificationFeedbackGenerator?
 
     func userContentController(_ controller: WKUserContentController, didReceive message: WKScriptMessage) {
-        guard let feedback = Self.feedback(message.body) else { return }
-        DispatchQueue.main.async { self.play(feedback) }
+        guard let feedback = Self.feedback(message.body), let view = message.webView else { return }
+        play(feedback, on: view)
     }
 
-    /// Played, then prepared again: the Taptic Engine goes idle after feedback,
+    /// Played, then prepared again: the Taptic Engine goes idle after feedback
+    /// ("After feedback is triggered, the Taptic Engine returns to its idle state",
+    /// https://developer.apple.com/documentation/uikit/uifeedbackgenerator/prepare()),
     /// and in a game the next haptic is rarely more than a moment away.
-    private func play(_ feedback: Feedback) {
+    private func play(_ feedback: Feedback, on view: UIView) {
         switch feedback {
         case .impact(let style, let intensity):
-            guard let generator = impacts[style] else { return }
+            let generator = impacts[style] ?? UIImpactFeedbackGenerator(style: style, view: view)
+            impacts[style] = generator
             generator.impactOccurred(intensity: intensity)
             generator.prepare()
         case .selection:
-            selection.selectionChanged()
-            selection.prepare()
+            let generator = selection ?? UISelectionFeedbackGenerator(view: view)
+            selection = generator
+            generator.selectionChanged()
+            generator.prepare()
         case .success:
-            notification.notificationOccurred(.success)
-            notification.prepare()
+            let generator = notification ?? UINotificationFeedbackGenerator(view: view)
+            notification = generator
+            generator.notificationOccurred(.success)
+            generator.prepare()
         }
     }
 

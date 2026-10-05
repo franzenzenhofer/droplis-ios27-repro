@@ -5,13 +5,32 @@ jobs:
     runs-on: macos-26
     steps:
       - uses: actions/checkout@v4
-      - run: sudo xcode-select -s /Applications/Xcode_26.3.app
-      - run: xcodebuild -project Droplis.xcodeproj -target Droplis -configuration Release -sdk iphonesimulator -arch arm64 CODE_SIGNING_ALLOWED=NO SYMROOT=$PWD/outA build | tail -2
-      - run: sed -i '' 's/^        context.coordinator.audio.start(webView)$/        \/\/ variant B/' Sources/GameWebView.swift && grep -c "variant B" Sources/GameWebView.swift
-      - run: xcodebuild -project Droplis.xcodeproj -target Droplis -configuration Release -sdk iphonesimulator -arch arm64 CODE_SIGNING_ALLOWED=NO SYMROOT=$PWD/outB build | tail -2
-      - run: (cd outA/Release-iphonesimulator && zip -qry ../../A.zip Droplis.app) && (cd outB/Release-iphonesimulator && zip -qry ../../B.zip Droplis.app)
+      - run: sudo xcode-select -s /Applications/Xcode_26.3.app && xcodebuild -version
+      - run: xcodebuild -project Droplis.xcodeproj -target Droplis -configuration Release -sdk iphonesimulator -arch arm64 CODE_SIGNING_ALLOWED=NO SYMROOT=$PWD/out build 2>&1 | tee build.log | tail -3
+      - run: "! grep -E 'warning:' build.log | grep -E 'Sources/' || (echo 'warnings in Sources' && grep -E 'warning:' build.log | grep Sources/ && exit 1)"
+      - run: cd out/Release-iphonesimulator && zip -qry ../../app.zip Droplis.app
       - uses: actions/upload-artifact@v4
-        with: { name: apps, path: "*.zip" }
+        with: { name: app, path: app.zip }
+  matrix27:
+    needs: build
+    runs-on: xcode-27
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        device: ["iPhone 17 Pro$", "iPad Air 11-inch \\(M3\\)"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { name: app }
+      - run: unzip -q app.zip && xcrun simctl list runtimes | grep iOS
+      - run: ./sim-matrix.sh "$PWD/Droplis.app" "iOS 27" out "${{ matrix.device }}"
+      - run: cat out/summary.txt && ! grep -E "DEAD|INSTALL_FAILED|CREATE_FAILED" out/summary.txt && ! grep -E "crashes=[1-9]" out/summary.txt && grep -q DONE out/summary.txt
+      - if: always()
+        run: echo "ART=$(echo '${{ matrix.device }}' | tr -cd 'A-Za-z0-9')" >> $GITHUB_ENV
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: "matrix-${{ env.ART }}", path: out }
   loop27:
     needs: build
     runs-on: xcode-27
@@ -19,16 +38,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        variant: [A, B]
         device: ["iPhone 17 Pro", "iPad Air 11-inch (M3)"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
-        with: { name: apps }
-      - run: unzip -q ${{ matrix.variant }}.zip
+        with: { name: app }
+      - run: unzip -q app.zip
       - run: ./launch-loop.sh "$PWD/Droplis.app" "iOS 27" "${{ matrix.device }}" 40 out
+      - run: cat out/result.txt && grep -q "launches=40 appDead=0" out/result.txt && grep -q "appCrashes=0" out/result.txt
       - if: always()
-        run: echo "ART=${{ matrix.variant }}-$(echo '${{ matrix.device }}' | tr -cd 'A-Za-z0-9')" >> $GITHUB_ENV
+        run: echo "ART=$(echo '${{ matrix.device }}' | tr -cd 'A-Za-z0-9')" >> $GITHUB_ENV
       - if: always()
         uses: actions/upload-artifact@v4
         with: { name: "loop-${{ env.ART }}", path: out }
