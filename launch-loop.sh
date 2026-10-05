@@ -8,12 +8,15 @@ mkdir -p "$OUT"; CR="$HOME/Library/Logs/DiagnosticReports"; mkdir -p "$CR"
 RUNTIME=$(xcrun simctl list runtimes -j | python3 -c "import sys,json;r=[x for x in json.load(sys.stdin)['runtimes'] if x['isAvailable'] and x['name'].startswith('$RT')];print(r[-1]['identifier'])")
 TYPE=$(xcrun simctl list devicetypes -j | python3 -c "import sys,json;print([d['identifier'] for d in json.load(sys.stdin)['devicetypes'] if d['name']=='$DEV'][0])")
 U=$(xcrun simctl create "loop $DEV" "$TYPE" "$RUNTIME"); cap 240 xcrun simctl boot "$U"; cap 300 xcrun simctl bootstatus "$U" -b >/dev/null 2>&1
-before=$(ls "$CR" | sort); dead=0
+before=$(ls "$CR" | sort); dead=0; t0=$(date +%s)
 for i in $(seq 1 "$N"); do
   xcrun simctl terminate "$U" $BID >/dev/null 2>&1; xcrun simctl uninstall "$U" $BID >/dev/null 2>&1
   cap 120 xcrun simctl install "$U" "$APP"; cap 60 xcrun simctl launch "$U" $BID >/dev/null 2>&1
   sleep 15
-  xcrun simctl spawn "$U" launchctl list 2>/dev/null | grep -q "UIKitApplication:$BID" || { dead=$((dead+1)); echo "launch $i: APP DEAD"; }
+  state=ALIVE
+  xcrun simctl spawn "$U" launchctl list 2>/dev/null | grep -q "UIKitApplication:$BID" || { dead=$((dead+1)); state="APP DEAD"; }
+  # one line per launch, written at once: a job that is cut short still leaves what it saw
+  echo "launch $i/$N: $state t=$(( $(date +%s) - t0 ))s deadSoFar=$dead" | tee -a "$OUT/progress.txt"
 done
 new=$(comm -13 <(echo "$before") <(ls "$CR" | sort))
 for f in $new; do cp "$CR/$f" "$OUT/"; done
